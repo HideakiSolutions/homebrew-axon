@@ -1,13 +1,13 @@
 class Axon < Formula
-  desc "Context engine for AI coding agents — token-efficient code indexing and retrieval"
+  desc "Local-first context engine and agentic memory for AI coding agents"
   homepage "https://github.com/HideakiSolutions/axon"
   license "MIT"
-  version "0.5.11"
+  version "1.2.10"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/HideakiSolutions/axon-releases/releases/download/v0.5.11/axon-0.5.11-macos-arm64.tar.gz"
-      sha256 "da6861d88a5d6187e85d01bc3ca4dcda13a9ec0f3f7e12133ffd6666120d1420"
+      url "https://github.com/HideakiSolutions/axon-releases/releases/download/v1.2.10/axon-1.2.10-macos-arm64.tar.gz"
+      sha256 "343045d617753b0077356750d8cc9e14cddc4e359686021906002176e219b033"
     else
       odie "axon does not ship a macOS x86_64 binary yet. Build from source: https://github.com/HideakiSolutions/axon"
     end
@@ -15,18 +15,20 @@ class Axon < Formula
 
   on_linux do
     if Hardware::CPU.intel?
-      url "https://github.com/HideakiSolutions/axon-releases/releases/download/v0.5.11/axon-0.5.11-linux-x64.tar.gz"
-      sha256 "ef17a22fc91f6090cc86684a3bc935c534816c184d2bc05225fac6763531408c"
+      url "https://github.com/HideakiSolutions/axon-releases/releases/download/v1.2.10/axon-1.2.10-linux-x64.tar.gz"
+      sha256 "571d912651e7928d245a3fef0e737f673645c9211e8ff46f016c0248fe58fdc6"
     else
       odie "axon does not ship a Linux arm64 binary yet. Build from source: https://github.com/HideakiSolutions/axon"
     end
   end
 
   def install
-    # Install binary + library into libexec to keep libduckdb private
-    libexec.install "bin", "lib", "README.md", "LICENSE", "CHANGELOG.md"
+    # Install the package into libexec to keep libduckdb/llama private.
+    # hooks/ and templates/ are consumed by install.sh (axon-setup below).
+    libexec.install "bin", "lib", "hooks", "templates", "README.md", "LICENSE", "CHANGELOG.md"
 
-    # macOS: fix @rpath so axon finds @rpath/libduckdb.dylib at runtime
+    # macOS: releases since v1.2.1 ship @rpath dylibs; add the brew layout's
+    # lib dir explicitly so the relocated binary always resolves them.
     if OS.mac?
       system "install_name_tool", "-add_rpath", "#{libexec}/lib", "#{libexec}/bin/axon"
     end
@@ -39,7 +41,8 @@ class Axon < Formula
     BASH
     chmod 0755, bin/"axon"
 
-    # axon-setup: wrapper for the project-setup script (wires Claude Code hooks)
+    # axon-setup: project setup (downloads the embedding model, registers the
+    # MCP server with Claude Code, wires the hooks)
     libexec.install "install.sh"
     (bin/"axon-setup").write <<~BASH
       #!/bin/bash
@@ -50,7 +53,17 @@ class Axon < Formula
     chmod 0755, bin/"axon-setup"
   end
 
+  def caveats
+    <<~EOS
+      The semantic-search embedding model (~80 MB) is not bundled. Run
+        axon-setup
+      once to download it, register the MCP server with Claude Code, and wire
+      the project hooks — or place the model under ~/.axon/models/ manually.
+    EOS
+  end
+
   test do
+    assert_match version.to_s, shell_output("#{bin}/axon --version")
     system "#{bin}/axon", "help"
   end
 end
