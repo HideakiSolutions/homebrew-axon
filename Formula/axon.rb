@@ -7,7 +7,7 @@ class Axon < Formula
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/HideakiSolutions/axon-releases/releases/download/v1.4.0/axon-1.4.0-macos-arm64.tar.gz"
-      sha256 "265dbde91f8073a6fd9017d3b86d5ce6a32a1ef1b4baa5c52145f74d5557fcb5"
+      sha256 "6aa5afd90ba49adeb6b4e9d5dd45ea4fe99ecea05ace2614c5360300bd88ba89"
     else
       odie "axon does not ship a macOS x86_64 binary yet. Build from source: https://github.com/HideakiSolutions/axon"
     end
@@ -16,7 +16,7 @@ class Axon < Formula
   on_linux do
     if Hardware::CPU.intel?
       url "https://github.com/HideakiSolutions/axon-releases/releases/download/v1.4.0/axon-1.4.0-linux-x64.tar.gz"
-      sha256 "c3d424c9694333123c26cf5cf791483fb06bc398da3d1f37f467e286556a22db"
+      sha256 "a6e6dca5c5f3e9f68881651a0451f164b3971a29ce98fd7d7c0cfe14044aed59"
     else
       odie "axon does not ship a Linux arm64 binary yet. Build from source: https://github.com/HideakiSolutions/axon"
     end
