@@ -2,12 +2,12 @@ class Axon < Formula
   desc "Local-first context engine and agentic memory for AI coding agents"
   homepage "https://github.com/HideakiSolutions/axon"
   license "MIT"
-  version "1.6.1"
+  version "1.6.2"
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/HideakiSolutions/axon-releases/releases/download/v1.6.1/axon-1.6.1-macos-arm64.tar.gz"
-      sha256 "f08a122ad719e64df7b66e061d1f96bd20f1cef571527b13038e7b55faa504ae"
+      url "https://github.com/HideakiSolutions/axon-releases/releases/download/v1.6.2/axon-1.6.2-macos-arm64.tar.gz"
+      sha256 "d29051ee369da8c2d71656a410a1e5326ba0d95838faf6609abf2218e6606a59"
     else
       odie "axon does not ship a macOS x86_64 binary yet. Build from source: https://github.com/HideakiSolutions/axon"
     end
@@ -15,8 +15,8 @@ class Axon < Formula
 
   on_linux do
     if Hardware::CPU.intel?
-      url "https://github.com/HideakiSolutions/axon-releases/releases/download/v1.6.1/axon-1.6.1-linux-x64.tar.gz"
-      sha256 "e0eee1a7fb6601def6506eab39ff1645c97db9e115eaf5adb67399b199c46456"
+      url "https://github.com/HideakiSolutions/axon-releases/releases/download/v1.6.2/axon-1.6.2-linux-x64.tar.gz"
+      sha256 "701ffe3b40949b621fb179af4956e5afca0091c9b214ef1ec3e77edf6586f1ca"
     else
       odie "axon does not ship a Linux arm64 binary yet. Build from source: https://github.com/HideakiSolutions/axon"
     end
